@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>Bouncing Ball (HTML 5)</title>
+            
+        <script>
+            var MIN_X = 0;
+            var MIN_Y = 0;
+            var WIDTH = 520;
+            var HEIGHT = 410;
+            var MAX_X = MIN_X + WIDTH - 1;
+            var MAX_Y = MIN_Y + HEIGHT - 1;
+            var color = getRndColor();
+            
+            var ballRadius = 15;
+            var ballSize = ballRadius*2 + 1;
+            // Randomly place the initial ball within the box, slightly off from border
+            var ballCenterX = (WIDTH - 2*ballSize)*Math.random() + (MIN_X + ballSize);
+            var ballCenterY = (HEIGHT - 2*ballSize)*Math.random() + (MIN_Y + ballSize);
+            // Initial speed
+            var ballSpeedX = 2;
+            var ballSpeedY = 1;
+            
+            var context;
+            
+            function init() {
+                var canvas = document.getElementById('box');
+                canvas.width = WIDTH;
+                canvas.height = HEIGHT;
+                canvas.style.border = "4px dotted";
+                
+                
+                
+                context = canvas.getContext('2d');
+                
+                setInterval(draw,draw,draw,10);
+            }
+            
+            function getRndColor() {
+                var r = 255*Math.random()|0, g = 255*Math.random()|0, b = 255*Math.random()|0;
+                return 'rgb(' + r + ',' + g + ',' + b + ')';
+            }
+            
+            // Draw the ball
+            function draw() {
+                // Calculate the ball's new position
+                ballCenterX += ballSpeedX;
+                ballCenterY += ballSpeedY;
+                // Check if the ball moves over the bounds
+                // If so, adjust the position and speed.
+                if (ballCenterX - ballRadius < MIN_X) {
+                    color = getRndColor();
+                    document.getElementById("myColor").value = color;
+                    ballSpeedX = -ballSpeedX; // Reflect along x axis
+                    ballCenterX = MIN_X + ballRadius; // Re-position the ball at the edge
+                } else if (ballCenterX + ballRadius > MAX_X/2) {
+                    color = getRndColor();
+                    document.getElementById("myColor").value = color;
+                    ballSpeedX = -ballSpeedX;
+                    ballCenterX = MAX_X/2 - ballRadius;
+                }
+                // May cross both x and y bounds
+                if (ballCenterY - ballRadius < MIN_Y) {
+                    color = getRndColor();
+                    document.getElementById("myColor").value = color;
+                    ballSpeedY = -ballSpeedY;
+                    ballCenterY = MIN_Y + ballRadius;
+                } else if (ballCenterY + ballRadius > MAX_Y) {
+                    color = getRndColor();
+                    document.getElementById("myColor").value = color;
+                    ballSpeedY = -ballSpeedY;
+                    ballCenterY = MAX_Y - ballRadius;
+                }
+                context.clearRect(MIN_X, MIN_Y, MAX_X, MAX_Y);
+                context.fillStyle = color; 
+                context.beginPath();
+                context.arc(ballCenterX, ballCenterY, ballRadius, 0, Math.PI*2, true);
+                context.closePath();
+                context.fill();
+            }
+            window.addEventListener("load", init, true);
+            
+            document.addEventListener('keydown', function(event) {
+                if(event.keyCode === 37) {
+                    ballSpeedX/=1.5;
+                    document.getElementById("myNumberx").value = Math.abs(ballSpeedX).toFixed(2);
+                }
+                else if(event.keyCode === 39) {
+                    ballSpeedX*=1.5;
+                    document.getElementById("myNumberx").value = Math.abs(ballSpeedX).toFixed(2);
+                }
+                else if(event.keyCode === 40) {
+                    ballSpeedY/=1.5;
+                    document.getElementById("myNumbery").value = Math.abs(ballSpeedY).toFixed(2);
+                }
+                else if(event.keyCode === 38) {
+                    ballSpeedY*=1.5;
+                    document.getElementById("myNumbery").value = Math.abs(ballSpeedY).toFixed(2);
+                }
+                else if(event.keyCode === 32) { 
+                    color = getRndColor();
+                }
+                else if(event.keyCode === 90) { 
+                    if(MAX_X>=0){
+                        MAX_X/=2;
+                    }
+                }
+                else if(event.keyCode === 88) { 
+                    if(MAX_X<=433.33){
+                        MAX_X*=2;
+                    } 
+                }
+                else if(event.keyCode === 65) { 
+                    if(MAX_Y>=0){
+                        MAX_Y/=2;
+                    }
+                }
+                else if(event.keyCode === 83) { 
+                    if(MAX_Y<=433.33){
+                        MAX_Y*=2;
+                    } 
+                }
+                
+                
+                
+                else if(event.keyCode === 188) {
+                    ballSpeedY/=1.5;
+                    ballSpeedX/=1.5;
+                    document.getElementById("myNumbery").value = Math.abs(ballSpeedY).toFixed(2);
+                    document.getElementById("myNumberx").value = Math.abs(ballSpeedX).toFixed(2);
+                
+            }
+            else if(event.keyCode === 190) {
+                    ballSpeedY*=1.5;
+                    ballSpeedX*=1.5;
+                    document.getElementById("myNumbery").value = Math.abs(ballSpeedY).toFixed(2);
+                    document.getElementById("myNumberx").value = Math.abs(ballSpeedX).toFixed(2);
+                
+            }
+                
+                
+            });
+        </script>
+    </head>
+    <body>
+        
+        <section>
+            <h2>Bouncing Ball (on HTML 5 Canvas)</h2>
+            <h3>Use Left and Right Arrows to Adjust X Speed<br/>
+                Use Up and Down Arrows to Adjust Y Speed<br/>
+            , and . Adjust both Speeds</h3>
+                
+            <canvas id="box">Canvas not supported</canvas>
+            <script>
+                
+            </script>
+        </section>
+        X-Speed: <input type="number" id="myNumberx" value="2"><br/>
+        Y-Speed: <input type="number" id="myNumbery" value="1"><br/>
+        Color:  <input type="text" id="myColor" value="">
+    </body>
+</html>
